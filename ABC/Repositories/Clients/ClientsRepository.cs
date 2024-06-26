@@ -4,10 +4,10 @@ namespace ABC.Repositories;
 
 public class ClientsRepository : IClientsRepository
 {
-    private readonly DatabaseContext _databaseContext;
+    private readonly AppDatabaseContext _appDatabaseContext;
 
-    public ClientsRepository(DatabaseContext databaseContext)
+    public ClientsRepository(AppDatabaseContext appDatabaseContext)
     {
-        _databaseContext = databaseContext;
+        _appDatabaseContext = appDatabaseContext;
     }
 }

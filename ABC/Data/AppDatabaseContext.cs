@@ -1,16 +1,19 @@
+using ABC.Models;
 using Microsoft.EntityFrameworkCore;
 namespace ABC.Data;
 
-public class DatabaseContext : DbContext
+public class AppDatabaseContext : DbContext
 {
-    protected DatabaseContext()
+    protected AppDatabaseContext()
     {
     }
 
-    public DatabaseContext(DbContextOptions options) : base(options)
+    public AppDatabaseContext(DbContextOptions options) : base(options)
     {
     }
-
+    
+    public DbSet<ClientCompany> ClientCompanies { get; set; }
+    public DbSet<ClientNatural> ClientNaturals { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

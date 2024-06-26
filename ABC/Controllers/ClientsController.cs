@@ -8,6 +8,11 @@ namespace ABC.Controllers;
 [Route("api/[controller]")]
 public class ClientsController : ControllerBase
 {
+    
+/*todo
+ 1. dodaj klienta, 2. usuń klienta, 3. zaktualizuj dane o kliencie
+ */
+    
     private readonly IClientsService _clientsService;
 
     public ClientsController(IClientsService clientsService)
