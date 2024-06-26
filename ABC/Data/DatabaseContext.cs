@@ -1,13 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 namespace ABC.Data;
 
-public class ApplicationContext : DbContext
+public class DatabaseContext : DbContext
 {
-    protected ApplicationContext()
+    protected DatabaseContext()
     {
     }
 
-    public ApplicationContext(DbContextOptions options) : base(options)
+    public DatabaseContext(DbContextOptions options) : base(options)
     {
     }
 
