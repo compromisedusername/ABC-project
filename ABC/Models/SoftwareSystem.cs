@@ -19,7 +19,7 @@ public class SoftwareSystem
     public Category Category { get; set; }
 
 
-    public IEnumerable<Contract> Contracts { get; set; } = new HashSet<Contract>();
+    public ICollection<ContractsSoftwareSystems> ContractsSoftwareSystems { get; set; } = new HashSet<ContractsSoftwareSystems>();
 
 
 

@@ -36,6 +36,8 @@ public class Contract
     public int IdDiscount { get; set; }
     public int IdSoftwareSystem { get; set; }
     public int IdClient { get; set; }
+
+    public Boolean IsSigned { get; set; } = false;
     
     [ForeignKey(nameof(IdClient))]
     public Client Client { get; set; }
@@ -44,7 +46,9 @@ public class Contract
     [ForeignKey(nameof(IdDiscount))]
     public Discount Discount { get; set; }
 
-    private IEnumerable<Payment> Payments { get; set; } = new HashSet<Payment>();
+    private ICollection<Payment> Payments { get; set; } = new HashSet<Payment>();
+    public ICollection<ContractsSoftwareSystems> ContractsSoftwareSystems { get; set; } = new HashSet<ContractsSoftwareSystems>();
+
 
 
 

@@ -20,8 +20,8 @@ public abstract class Client
     [ForeignKey(nameof(IdAddress))]
     public Address Address { get; set; }
     
-    public IEnumerable<Contract> Contracts { get; set; } = new HashSet<Contract>();
-    public IEnumerable<Payment> Payments { get; set; } = new HashSet<Payment>();
+    public ICollection<Contract> Contracts { get; set; } = new HashSet<Contract>();
+    public ICollection<Payment> Payments { get; set; } = new HashSet<Payment>();
 
     
 }

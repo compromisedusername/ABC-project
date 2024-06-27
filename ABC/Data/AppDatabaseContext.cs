@@ -20,6 +20,7 @@ public class AppDatabaseContext : DbContext
     public DbSet<Discount> Discounts { get; set; }
     public DbSet<Payment> Payments { get; set; }
     public DbSet<SoftwareSystem> SoftwareSystems { get; set; }
+    public DbSet<ContractsSoftwareSystems> ContractsSoftwareSystemsEnumerable { get; set; }
 
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)

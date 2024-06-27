@@ -19,5 +19,5 @@ public class Address
     [MaxLength(20)]
     public string HouseNumber { get; set; }
 
-    public IEnumerable<Client> Clients { get; set; } = new HashSet<Client>();
+    public ICollection<Client> Clients { get; set; } = new HashSet<Client>();
 }

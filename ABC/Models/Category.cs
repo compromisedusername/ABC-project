@@ -11,6 +11,6 @@ public class Category
     [MaxLength(50)]
     public string Name { get; set; }
 
-    private IEnumerable<SoftwareSystem> SoftwareSystems { get; set; } = new HashSet<SoftwareSystem>();
+    private ICollection<SoftwareSystem> SoftwareSystems { get; set; } = new HashSet<SoftwareSystem>();
 
 }
