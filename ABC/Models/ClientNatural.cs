@@ -21,5 +21,7 @@ public class ClientNatural : Client
     [MinLength(9)]
     [MaxLength(9)]
     public string PESEL { get; set; }
+    public bool IsDeleted { get; set; } = false;
+
     
 }

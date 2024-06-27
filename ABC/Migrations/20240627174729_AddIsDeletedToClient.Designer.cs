@@ -4,6 +4,7 @@ using ABC.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ABC.Migrations
 {
     [DbContext(typeof(AppDatabaseContext))]
-    partial class AppDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240627174729_AddIsDeletedToClient")]
+    partial class AddIsDeletedToClient
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -119,6 +122,9 @@ namespace ABC.Migrations
                     b.Property<int>("IdAddress")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -187,8 +193,8 @@ namespace ABC.Migrations
                         new
                         {
                             Id = 1,
-                            DateFrom = new DateTime(2024, 6, 27, 20, 11, 35, 381, DateTimeKind.Local).AddTicks(4257),
-                            DateTo = new DateTime(2024, 7, 17, 20, 11, 35, 381, DateTimeKind.Local).AddTicks(4676),
+                            DateFrom = new DateTime(2024, 6, 27, 19, 47, 28, 902, DateTimeKind.Local).AddTicks(894),
+                            DateTo = new DateTime(2024, 7, 17, 19, 47, 28, 902, DateTimeKind.Local).AddTicks(1315),
                             IdClient = 1,
                             IdDiscount = 1,
                             IdSoftwareSystem = 1,
@@ -252,8 +258,8 @@ namespace ABC.Migrations
                         new
                         {
                             Id = 1,
-                            DateFrom = new DateTime(2024, 6, 26, 20, 11, 35, 376, DateTimeKind.Local).AddTicks(8273),
-                            DateTo = new DateTime(2024, 7, 7, 20, 11, 35, 380, DateTimeKind.Local).AddTicks(4651),
+                            DateFrom = new DateTime(2024, 6, 26, 19, 47, 28, 897, DateTimeKind.Local).AddTicks(1370),
+                            DateTo = new DateTime(2024, 7, 7, 19, 47, 28, 901, DateTimeKind.Local).AddTicks(745),
                             Name = "Black Friday",
                             Value = 20
                         });
@@ -292,7 +298,7 @@ namespace ABC.Migrations
                         new
                         {
                             Id = 1,
-                            Date = new DateTime(2024, 6, 27, 20, 11, 35, 381, DateTimeKind.Local).AddTicks(1268),
+                            Date = new DateTime(2024, 6, 27, 19, 47, 28, 901, DateTimeKind.Local).AddTicks(8038),
                             IdClient = 1,
                             IdContract = 1,
                             MoneyAmount = 1000m
@@ -368,6 +374,7 @@ namespace ABC.Migrations
                             Id = 1,
                             Email = "example@example.com",
                             IdAddress = 1,
+                            IsDeleted = false,
                             PhoneNumber = "661354887",
                             CompanyName = "CompanyName",
                             KRS = "12345678"
@@ -382,9 +389,6 @@ namespace ABC.Migrations
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -404,9 +408,9 @@ namespace ABC.Migrations
                             Id = 2,
                             Email = "example@example2.com",
                             IdAddress = 2,
+                            IsDeleted = false,
                             PhoneNumber = "887345645",
                             FristName = "Jan",
-                            IsDeleted = false,
                             LastName = "Kowalski",
                             PESEL = "031276398"
                         });

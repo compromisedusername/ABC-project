@@ -14,6 +14,8 @@ public class AppDatabaseContext : DbContext
     }
     
     public DbSet<Client> Clients { get; set; }
+    public DbSet<ClientCompany> ClientsCompanies { get; set; }
+    public DbSet<ClientNatural> ClientsNaturals { get; set; }
     public DbSet<Address> Addresses { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Contract> Contracts { get; set; }
@@ -49,13 +51,7 @@ public class AppDatabaseContext : DbContext
             .HasForeignKey(p => p.IdContract)
             .OnDelete(DeleteBehavior.NoAction);
 
-        /*
-        modelBuilder.Entity<ClientCompany>()
-            .HasBaseType<Client>();
-
-        modelBuilder.Entity<ClientNatural>()
-            .HasBaseType<Client>();
-            */
+        
 
         
         

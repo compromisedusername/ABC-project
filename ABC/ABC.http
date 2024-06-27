@@ -1,6 +1,4 @@
 @ABC_HostAddress = http://localhost:5081
 
-GET {{ABC_HostAddress}}/weatherforecast/
-Accept: application/json
 
 ###

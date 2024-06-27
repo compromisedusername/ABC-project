@@ -1,5 +1,12 @@
 using System.Text;
 using ABC.Data;
+using ABC.Repositories.Clients;
+using ABC.Repositories.Contracts;
+using ABC.Repositories.Discounts;
+using ABC.Repositories.SoftwareSystems;
+using ABC.Services;
+using ABC.Services.Clients;
+using ABC.Services.Contracts;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +19,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+builder.Services.AddScoped<IClientsRepository, ClientsRepository>();
+builder.Services.AddScoped<IContractsRepository, ContractsRepository>();
+builder.Services.AddScoped<ISoftwareSystemsRepository, SoftwareSystemsRepository>();
+builder.Services.AddScoped<IDiscountsRepository, DiscountsRepository>();
+
+builder.Services.AddScoped<IClientsService, ClientsService>();
+builder.Services.AddScoped<IContractsService, ContractsService>();
 builder.Services.AddDbContext<AppDatabaseContext>(
     options => options.UseSqlServer("Name=ConnectionStrings:Default")
 );
@@ -29,7 +43,7 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.FromMinutes(2),
         ValidIssuer = "https://localhost:5001", //should come from configuration
         ValidAudience = "https://localhost:5001", //should come from configuration
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["SecretKey"]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]))
     };
 
     opt.Events = new JwtBearerEvents
@@ -53,7 +67,7 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.FromMinutes(2),
         ValidIssuer = "https://localhost:5001", //should come from configuration
         ValidAudience = "https://localhost:5001", //should come from configuration
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["SecretKey"]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]))
     };
 });
 
@@ -68,6 +82,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.MapControllers();
+app.UseAuthentication();
 
 app.UseHttpsRedirection();
 

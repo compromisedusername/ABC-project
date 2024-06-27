@@ -1,19 +1,104 @@
-namespace ABC.Services;
+using ABC.DTOs;
+using ABC.Exceptions;
+using ABC.Models;
+using ABC.Repositories.Clients;
+
+namespace ABC.Services.Clients;
 
 public class ClientsService : IClientsService
 {
-    private readonly IClientsService _clientsService;
+    private readonly IClientsRepository _clientsRepository;
 
-    public ClientsService(IClientsService clientsService)
+    public ClientsService(IClientsRepository clientsRepository)
     {
-        _clientsService = clientsService;
+        _clientsRepository = clientsRepository;
     }
-    
-    /*todo
-     
-     numer PESEL, numer KRS nie może być zmieniany po jego wprowadzeniu.
+
+    public async Task AddClientAsync(RequestClientAddDto request)
+    {
+        Client client;
+        string validatePeselOrKrs;
+        if (request.ClientType == "Natural")
+        {
+            client = new ClientNatural
+            {
+                Email = request.Email,
+                PhoneNumber = request.PhoneNumber,
+                IdAddress = request.IdAddress,
+                FristName = request.FirstName,
+                LastName = request.LastName,
+                PESEL = request.PESEL
+            };
+            validatePeselOrKrs = request.PESEL;
+        }
+        else
+        {
+            client = new ClientCompany
+            {
+                Email = request.Email,
+                PhoneNumber = request.PhoneNumber,
+                IdAddress = request.IdAddress,
+                CompanyName = request.CompanyName,
+                KRS = request.KRS
+            };
+            validatePeselOrKrs = request.KRS;
+
+        }
+
+        if (await _clientsRepository.DoesClientWithGivenPeselOrKrsExist(validatePeselOrKrs))
+        {
+                throw new DomainException()
+                {
+                    Message = "Client with given KRS or PESEL already exist!",
+                    StatusCode = 400
+                };
+            
+        }
+        await _clientsRepository.AddClientAsync(client);
+    }
+
+    public async Task UpdateClientAsync(int id, RequestClientUpdateDto request)
+    {
+        var client = await _clientsRepository.GetClientByIdAsync(id);
+        if (client != null)
+        {
+            client.Email = request.Email;
+            client.PhoneNumber = request.PhoneNumber;
+            client.IdAddress = request.IdAddress;
+
+            if (client is ClientNatural)
+            {
+                var naturalClient = client as ClientNatural;
+                naturalClient.FristName = request.FirstName;
+                naturalClient.LastName = request.LastName;
+            }
+            else if (client is ClientCompany)
+            {
+                var companyClient = client as ClientCompany;
+                companyClient.CompanyName = request.CompanyName;
+            }
+            await _clientsRepository.UpdateClientAsync(client);
+        }
+        {
+            throw new DomainException()
+            {
+                Message = "Client not found!",
+                StatusCode = 404
+            };
+        };
+    }
+
+    public async Task DeleteClientAsync(int id)
+    {
+        var res = await _clientsRepository.DeleteClientAsync(id);
+        if (!res)
+        {
+            throw new DomainException()
+            {
+                Message = "Client not found!",
+                StatusCode = 404
+            };
+        }
         
-    Usuwając dane o kliencie indywidualnym, nadpisujemy dane w bazie, ale zachowujemy sam rekord w bazie danych. 
-        
-    Dane o firmach nie mogą być usuwane.*/
+    }
 }

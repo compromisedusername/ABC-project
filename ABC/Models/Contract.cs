@@ -35,7 +35,7 @@ public class Contract
     [MaxLength(200)]
     public string UpdateInformation { get; set; }
     
-    public int IdDiscount { get; set; }
+    public int? IdDiscount { get; set; }
     public int IdSoftwareSystem { get; set; }
     public int IdClient { get; set; }
 

@@ -20,6 +20,7 @@ public abstract class Client
     public int IdAddress { get; set; }
     [ForeignKey(nameof(IdAddress))]
     public Address Address { get; set; }
+
     
     public ICollection<Contract> Contracts { get; set; } = new HashSet<Contract>();
     public ICollection<Payment> Payments { get; set; } = new HashSet<Payment>();
