@@ -25,6 +25,9 @@ public class AppDatabaseContext : DbContext
     public DbSet<ContractsSoftwareSystems> ContractsSoftwareSystemsEnumerable { get; set; }
 
     
+    public DbSet<AppUser> Users { get; set; }
+
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
        

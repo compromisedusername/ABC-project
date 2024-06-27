@@ -2,6 +2,7 @@ using ABC.DTOs;
 using ABC.Services;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ABC.Controllers
 {
@@ -15,7 +16,7 @@ namespace ABC.Controllers
         {
             _clientsService = clientsService;
         }
-
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> AddClient([FromBody] RequestClientAddDto request)
         {
@@ -23,7 +24,7 @@ namespace ABC.Controllers
              return Created();
            
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateClient(int id, [FromBody] RequestClientUpdateDto request)
         {
@@ -31,7 +32,7 @@ namespace ABC.Controllers
             return NoContent();
             
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteClient(int id)
         {
