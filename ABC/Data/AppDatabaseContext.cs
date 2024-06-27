@@ -27,6 +27,39 @@ public class AppDatabaseContext : DbContext
     {
        
         base.OnModelCreating(modelBuilder);
+        
+        modelBuilder.Entity<ContractsSoftwareSystems>()
+            .HasKey(cs => new { cs.IdContract, cs.IdSoftwareSystem });
+
+        modelBuilder.Entity<ContractsSoftwareSystems>()
+            .HasOne(cs => cs.Contract)
+            .WithMany(c => c.ContractsSoftwareSystems)
+            .HasForeignKey(cs => cs.IdContract)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        modelBuilder.Entity<ContractsSoftwareSystems>()
+            .HasOne(cs => cs.SoftwareSystem)
+            .WithMany(s => s.ContractsSoftwareSystems)
+            .HasForeignKey(cs => cs.IdSoftwareSystem)
+            .OnDelete(DeleteBehavior.NoAction);
+        
+        modelBuilder.Entity<Payment>()
+            .HasOne(p => p.Contract)
+            .WithMany()
+            .HasForeignKey(p => p.IdContract)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        /*
+        modelBuilder.Entity<ClientCompany>()
+            .HasBaseType<Client>();
+
+        modelBuilder.Entity<ClientNatural>()
+            .HasBaseType<Client>();
+            */
+
+        
+        
+        
         modelBuilder.Entity<Address>().HasData(new List<Address>
         {
             new Address
@@ -87,6 +120,50 @@ public class AppDatabaseContext : DbContext
                 Value = 20,
                 DateFrom = DateTime.Now.AddDays(-1),
                 DateTo = DateTime.Now.AddDays(10)
+            }
+        }); modelBuilder.Entity<SoftwareSystem>().HasData(new List<SoftwareSystem>
+        {
+            new SoftwareSystem
+            {
+                Id = 1,
+                Name = "EduSoftware",
+                Description = "Educational Software for students",
+                VersionInformation = "Version 1.0",
+                IdCategory = 1,
+                PriceForYear = 2000
+            }
+        }); modelBuilder.Entity<Payment>().HasData(new List<Payment>
+        {
+            new Payment
+            {
+                Id = 1,
+                MoneyAmount = 1000,
+                Date = DateTime.Now,
+                IdContract = 1,
+                IdClient = 1,
+            }
+        }); modelBuilder.Entity<Contract>().HasData(new List<Contract>
+        {
+            new Contract
+            {
+                Id = 1,
+                DateFrom = DateTime.Now,
+                DateTo = DateTime.Now.AddDays(20),
+                IsActive = false,
+                Price = 3000,
+                SupportUpdatePeriodInYears = 2,
+                UpdateInformation = "Possible updates in future",
+                IdDiscount = 1,
+                IdSoftwareSystem = 1,
+                IdClient = 1,
+                IsSigned = false,
+            }
+        }); modelBuilder.Entity<ContractsSoftwareSystems>().HasData(new List<ContractsSoftwareSystems>
+        {
+            new ContractsSoftwareSystems
+            {
+                IdContract = 1,
+                IdSoftwareSystem = 1,
             }
         });
     }

@@ -8,11 +8,11 @@ namespace ABC.Models;
 public class ContractsSoftwareSystems
 {
     
-    public int IdContract { get; set; }
-    public int IdSoftwareSystem { get; set; }
+    public int? IdContract { get; set; }
+    public int? IdSoftwareSystem { get; set; }
     
     [ForeignKey(nameof(IdContract))]
-    public Contract Contract { get; set; }
+    public Contract? Contract { get; set; }
     [ForeignKey(nameof(IdSoftwareSystem))]
-    public SoftwareSystem SoftwareSystem { get; set; }
+    public SoftwareSystem? SoftwareSystem { get; set; }
 }

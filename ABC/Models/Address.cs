@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ABC.Models;
 
+[Table("Address")]
 public class Address
 {
     [Key]

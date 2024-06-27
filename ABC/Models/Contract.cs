@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ABC.Models;
 
+[Table("Contract")]
+
 public class Contract
 {
     

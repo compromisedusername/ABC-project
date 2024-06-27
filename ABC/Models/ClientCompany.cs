@@ -3,6 +3,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ABC.Models;
 
+[Table("ClientCompany")]
+
 public class ClientCompany : Client
 {
     

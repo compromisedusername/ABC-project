@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
 namespace ABC.Models;
+[Table("Payment")]
 
 public class Payment
 {
