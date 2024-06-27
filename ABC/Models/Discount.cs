@@ -1,8 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using Azure.Core;
 
 namespace ABC.Models;
 
+[Table("Discount")]
 public class Discount
 {
     [Key]
