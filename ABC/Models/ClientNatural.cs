@@ -4,6 +4,8 @@ namespace ABC.Models;
 
 public class ClientNatural : Client
 {
+    
+    
     [Required]
     [MaxLength(50)]
     public string FristName { get; set; }

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ABC.Models;
 
@@ -11,11 +12,16 @@ public abstract class Client
     [EmailAddress]
     public string Email { get; set; }
     
-    [Required] 
-    public string Address { get; set; }
-    
     [Required]
     [Phone]
     public string PhoneNumber { get; set; }
+    
+    public int IdAddress { get; set; }
+    [ForeignKey(nameof(IdAddress))]
+    public Address Address { get; set; }
+    
+    public IEnumerable<Contract> Contracts { get; set; } = new HashSet<Contract>();
+    public IEnumerable<Payment> Payments { get; set; } = new HashSet<Payment>();
+
     
 }

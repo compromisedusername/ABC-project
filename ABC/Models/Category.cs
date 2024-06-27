@@ -10,4 +10,7 @@ public class Category
     public int Description { get; set; }
     [MaxLength(50)]
     public int Name { get; set; }
+
+    private IEnumerable<SoftwareSystem> SoftwareSystems { get; set; } = new HashSet<SoftwareSystem>();
+
 }
