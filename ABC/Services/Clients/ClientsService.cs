@@ -1,6 +1,7 @@
 using ABC.DTOs;
 using ABC.Exceptions;
 using ABC.Models;
+using ABC.Repositories.Addresses;
 using ABC.Repositories.Clients;
 
 namespace ABC.Services.Clients;
@@ -8,14 +9,25 @@ namespace ABC.Services.Clients;
 public class ClientsService : IClientsService
 {
     private readonly IClientsRepository _clientsRepository;
+    private readonly IAddressesRepository _addressesRepository;
 
-    public ClientsService(IClientsRepository clientsRepository)
+    public ClientsService(IClientsRepository clientsRepository, IAddressesRepository addressesRepository)
     {
         _clientsRepository = clientsRepository;
+        _addressesRepository = addressesRepository;
     }
 
     public async Task AddClientAsync(RequestClientAddDto request)
     {
+        if (await _addressesRepository.GetAddressByIdAsync(request.IdAddress) == null)
+        {
+            throw new DomainException()
+            {
+                Message = "Address for given Id: " + request.IdAddress + " does not exist",
+                StatusCode = 404
+            };
+        };
+        
         Client client;
         string validatePeselOrKrs;
         if (request.ClientType == "Natural")

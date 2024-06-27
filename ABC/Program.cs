@@ -1,5 +1,6 @@
 using System.Text;
 using ABC.Data;
+using ABC.Repositories.Addresses;
 using ABC.Repositories.Clients;
 using ABC.Repositories.Contracts;
 using ABC.Repositories.Discounts;
@@ -7,6 +8,7 @@ using ABC.Repositories.SoftwareSystems;
 using ABC.Services;
 using ABC.Services.Clients;
 using ABC.Services.Contracts;
+using GakkoHorizontalSlice.Middlewares;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +25,7 @@ builder.Services.AddScoped<IClientsRepository, ClientsRepository>();
 builder.Services.AddScoped<IContractsRepository, ContractsRepository>();
 builder.Services.AddScoped<ISoftwareSystemsRepository, SoftwareSystemsRepository>();
 builder.Services.AddScoped<IDiscountsRepository, DiscountsRepository>();
-
+builder.Services.AddScoped<IAddressesRepository, AddressesRepository>();
 builder.Services.AddScoped<IClientsService, ClientsService>();
 builder.Services.AddScoped<IContractsService, ContractsService>();
 builder.Services.AddDbContext<AppDatabaseContext>(
@@ -83,6 +85,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ErrorHandlingMiddleware>();
 app.MapControllers();
 app.UseAuthentication();
 

@@ -47,7 +47,8 @@ public class ErrorHandlingMiddleware
             error = new
             {
                 message = "An error occurred while processing your request.",
-                detail = de.Message
+                detail = de.Message,
+                statusCode = de.StatusCode
             }
         };
 
