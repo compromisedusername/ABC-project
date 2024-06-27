@@ -43,9 +43,10 @@ public class Contract
     public SoftwareSystem SoftwareSystem { get; set; }
     [ForeignKey(nameof(IdDiscount))]
     public Discount Discount { get; set; }
-    
-    
-    
-    
-    
+
+    private IEnumerable<Payment> Payments { get; set; } = new HashSet<Payment>();
+
+
+
+
 }

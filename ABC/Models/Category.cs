@@ -7,9 +7,9 @@ public class Category
     [Key]
     public int Id { get; set; }
     [MaxLength(200)]
-    public int Description { get; set; }
+    public string Description { get; set; }
     [MaxLength(50)]
-    public int Name { get; set; }
+    public string Name { get; set; }
 
     private IEnumerable<SoftwareSystem> SoftwareSystems { get; set; } = new HashSet<SoftwareSystem>();
 

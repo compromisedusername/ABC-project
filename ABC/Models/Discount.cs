@@ -24,4 +24,7 @@ public class Discount
     [DataType(DataType.Date)]
     public DateTime DateTo { get; set; }
     
+    private IEnumerable<Contract> Contracts { get; set; } = new HashSet<Contract>();
+
+    
 }
