@@ -5,6 +5,7 @@ using System.Text;
 using ABC.Data;
 using ABC.Exceptions;
 using ABC.Helpers;
+using ABC.Repositories.Users;
 using GakkoHorizontalSlice.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,12 +18,12 @@ namespace ABC.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IConfiguration _configuration;
-    private readonly AppDatabaseContext _context;
+    private readonly IUsersRepository _usersRepository;
 
-    public AuthController(IConfiguration configuration, AppDatabaseContext context)
+    public AuthController(IConfiguration configuration, IUsersRepository usersRepository)
     {
         _configuration = configuration;
-        _context = context;
+        _usersRepository = usersRepository;
     }
     
     [AllowAnonymous]
@@ -30,16 +31,14 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> RegisterStudent(RegisterRequestDto model)
     {
         var hashedPasswordAndSalt = SecurityHelpers.GetHashedPasswordAndSalt(model.Password);
-
-
-        if (await _context.Users.FirstOrDefaultAsync(e=>e.Login == model.Login) != null)
+        if (await _usersRepository.DoesUserExistsWithGivenLogin(model.Login) != null)
         {
             throw new DomainException()
             {
                 Message = "Login is already in use.",
                 StatusCode = 400
             };
-        } if (await _context.Users.FirstOrDefaultAsync(e=>e.Email == model.Email) != null)
+        } if (await _usersRepository.DoesUserWithGivenEmailExist(model.Email) != null)
         {
             throw new DomainException()
             {
@@ -58,17 +57,15 @@ public class AuthController : ControllerBase
             RefreshTokenExp = DateTime.Now.AddDays(1)
         };
 
-        await _context.Users.AddAsync(user);
-        await _context.SaveChangesAsync();
+        await _usersRepository.AddUser(user);
 
         return Ok();
     }
      [AllowAnonymous]
     [HttpPost("login")]
-    public IActionResult Login(LoginRequestDto loginRequestDto)
+    public async  Task<IActionResult> Login(LoginRequestDto loginRequestDto)
     {
-        AppUser user = _context.Users.Where(u => u.Login == loginRequestDto.Login).FirstOrDefault();
-
+        AppUser user = await _usersRepository.GetUserByLogin(loginRequestDto);
         string passwordHashFromDb = user.Password;
         string curHashedPassword = SecurityHelpers.GetHashedPasswordWithSalt(loginRequestDto.Password, user.Salt);
 
@@ -103,7 +100,7 @@ public class AuthController : ControllerBase
 
         user.RefreshToken = SecurityHelpers.GenerateRefreshToken();
         user.RefreshTokenExp = DateTime.Now.AddDays(1);
-        _context.SaveChanges();
+        _usersRepository.UpdateUser(user);
 
         return Ok(new
         {
@@ -114,9 +111,9 @@ public class AuthController : ControllerBase
 
     [Authorize(AuthenticationSchemes = "IgnoreTokenExpirationScheme")]
     [HttpPost("refresh")]
-    public IActionResult Refresh(RefreshTokenRequestDto refreshToken)
+    public async Task<IActionResult> Refresh(RefreshTokenRequestDto refreshToken)
     {
-        AppUser user = _context.Users.Where(u => u.RefreshToken == refreshToken.RefreshToken).FirstOrDefault();
+        AppUser user = await _usersRepository.GetUserByRefreshToken(refreshToken);
         if (user == null)
         {
             throw new SecurityTokenException("Invalid refresh token");
@@ -153,7 +150,7 @@ public class AuthController : ControllerBase
 
         user.RefreshToken = SecurityHelpers.GenerateRefreshToken();
         user.RefreshTokenExp = DateTime.Now.AddDays(1);
-        _context.SaveChanges();
+        await _usersRepository.UpdateUser(user);
 
         
         return Ok(new
