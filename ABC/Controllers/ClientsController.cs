@@ -28,6 +28,10 @@ namespace ABC.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateClient(int id, [FromBody] RequestClientUpdateDto request)
         {
+            if (id != request.IdClient)
+            {
+                return BadRequest("Client id doesnt match in request.");
+            }
             await _clientsService.UpdateClientAsync(id, request);
             return NoContent();
             

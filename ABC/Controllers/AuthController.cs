@@ -1,15 +1,12 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
-using ABC.Data;
 using ABC.Exceptions;
 using ABC.Helpers;
 using ABC.Repositories.Users;
 using GakkoHorizontalSlice.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 namespace ABC.Controllers;
