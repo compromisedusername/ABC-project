@@ -56,9 +56,20 @@ public class AppDatabaseContext : DbContext
             .HasForeignKey(p => p.IdContract)
             .OnDelete(DeleteBehavior.NoAction);
 
-        
 
-        
+
+        modelBuilder.Entity<AppUser>().HasData(new List<AppUser>
+        {
+            new AppUser
+            {
+                IdUser = 1,
+                Login = "admin",
+                Email = "admin@abc.pl",
+                Password = "UCj/SzNluTr2O7t1unmdXEPX3VpOkxqWUUMrhfwefiA=",
+                Salt = "s1q1vyXNvCGXtzXswP6GUg==",
+                RefreshToken = "gdaodTn6fZrAFZnvZhKLnabnBVlyE6/lJTlXcfpR3EI="
+            }
+        });
         
         
         modelBuilder.Entity<Address>().HasData(new List<Address>

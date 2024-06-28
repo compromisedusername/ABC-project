@@ -1,5 +1,6 @@
 using System.Runtime.InteropServices.JavaScript;
 using System.Text.Json;
+using ABC.Exceptions;
 using ABC.Repositories.Contracts;
 using ABC.Repositories.Payment;
 using ABC.Services.ExchangeRates;
@@ -10,14 +11,13 @@ public class RevenueService : IRevenueService
     {
         private readonly IPaymentsRepository _paymentsRepository;
         private readonly IContractsRepository _contractsRepository;
-        private readonly IConfiguration _config;
+        private readonly IExchangeRateService _exchangeRateService;
 
-
-        public RevenueService(IPaymentsRepository paymentsRepository, IContractsRepository contractsRepository, IConfiguration config)
+        public RevenueService(IPaymentsRepository paymentsRepository, IContractsRepository contractsRepository, IConfiguration config, IExchangeRateService exchangeRateService)
         {
             _paymentsRepository = paymentsRepository;
             _contractsRepository = contractsRepository;
-            _config = config;
+            _exchangeRateService = exchangeRateService;
         }
 
         public async Task<decimal> GetCurrentRevenueAsync(string currency)
@@ -51,10 +51,21 @@ public class RevenueService : IRevenueService
                 return amount;
             }
 
-            using var client = new HttpClient();
-            var exchangeRateSerivce = new ExchangeRateService(client, _config);
-            var exchangeRateResponse = await exchangeRateSerivce.GetExchangeRatesAsync("PLN");
-            var rate = exchangeRateResponse.ConversionRates[currency];
-            return amount * rate;
+            /*try
+            {*/
+                var exchangeRateResponse =  await _exchangeRateService.GetExchangeRatesAsync("PLN");
+                var rate = exchangeRateResponse.ConversionRates[currency.ToLower()];
+                return amount * rate;
+
+            /*}
+            catch (Exception e)
+            {
+                throw new DomainException()
+                {
+                    Message = "Given currency does not exist. " + e.Message,
+                    StatusCode = 404
+                };
+            }*/
+        
         }
     }

@@ -164,19 +164,6 @@ public class AuthController : ControllerBase
     }
     
     
-    [Authorize(Roles = "admin")]
-    [HttpPost("admin-only-endpoint")]
-    public IActionResult AdminOnlyEndpoint()
-    {
-        return Ok();
-    }
-
-    [Authorize(Roles = "user")]
-    [HttpPost("user-only-endpoint")]
-    public IActionResult UserOnlyEndpoint()
-    {
-        return Ok();
-
-    }
+   
     
 }

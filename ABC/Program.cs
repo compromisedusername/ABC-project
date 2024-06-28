@@ -11,6 +11,7 @@ using ABC.Repositories.SoftwareSystems;
 using ABC.Services;
 using ABC.Services.Clients;
 using ABC.Services.Contracts;
+using ABC.Services.ExchangeRates;
 using ABC.Services.Revenue;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -27,6 +28,7 @@ var audience = (builder.Configuration["Jwt:Audience"]);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+builder.Services.AddHttpClient();
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -64,6 +66,7 @@ builder.Services.AddScoped<IClientsService, ClientsService>();
 builder.Services.AddScoped<IContractsService, ContractsService>();
 builder.Services.AddScoped<IPaymentsRepository, PaymentsRepository>();
 builder.Services.AddScoped<IRevenueService, RevenueService>();
+builder.Services.AddScoped<IExchangeRateService, ExchangeRateService>();
 builder.Services.AddDbContext<AppDatabaseContext>(
     options =>
     {
