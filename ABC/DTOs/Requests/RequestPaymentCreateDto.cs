@@ -7,5 +7,7 @@ public class RequestPaymentCreateDto
     [Required]
     public int ContractId { get; set; }
     [Required]
+    public int ClientId { get; set; }
+    [Required]
     public decimal Amount { get; set; }
 }

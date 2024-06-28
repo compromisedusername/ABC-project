@@ -18,6 +18,8 @@ public class Payment
     [Required]
     [DataType(DataType.Date)]
     public DateTime Date { get; set; }
+
+    public bool isRefunded { get; set; } = false;
     
     
     public int IdContract { get; set; }

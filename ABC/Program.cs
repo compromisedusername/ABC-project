@@ -1,14 +1,17 @@
 using System.Text;
+using ABC.Controllers;
 using ABC.Data;
 using ABC.Middlewares;
 using ABC.Repositories.Addresses;
 using ABC.Repositories.Clients;
 using ABC.Repositories.Contracts;
 using ABC.Repositories.Discounts;
+using ABC.Repositories.Payment;
 using ABC.Repositories.SoftwareSystems;
 using ABC.Services;
 using ABC.Services.Clients;
 using ABC.Services.Contracts;
+using ABC.Services.Revenue;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -57,6 +60,8 @@ builder.Services.AddScoped<IDiscountsRepository, DiscountsRepository>();
 builder.Services.AddScoped<IAddressesRepository, AddressesRepository>();
 builder.Services.AddScoped<IClientsService, ClientsService>();
 builder.Services.AddScoped<IContractsService, ContractsService>();
+builder.Services.AddScoped<IPaymentsRepository, PaymentsRepository>();
+builder.Services.AddScoped<IRevenueService, RevenueService>();
 builder.Services.AddDbContext<AppDatabaseContext>(
     options =>
     {

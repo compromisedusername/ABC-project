@@ -4,6 +4,7 @@ using ABC.Models;
 using ABC.Repositories.Clients;
 using ABC.Repositories.Contracts;
 using ABC.Repositories.Discounts;
+using ABC.Repositories.Payment;
 
 namespace ABC.Services.Contracts;
  public class ContractsService : IContractsService
@@ -12,13 +13,15 @@ namespace ABC.Services.Contracts;
         private readonly IClientsRepository _clientsRepository;
         private readonly ISoftwareSystemsRepository _softwareSystemsRepository;
         private readonly IDiscountsRepository _discountsRepository;
+        private readonly IPaymentsRepository _paymentsRepository;
 
-        public ContractsService(IContractsRepository contractsRepository, IClientsRepository clientsRepository, ISoftwareSystemsRepository softwareSystemsRepository, IDiscountsRepository discountsRepository)
+        public ContractsService(IContractsRepository contractsRepository, IClientsRepository clientsRepository, ISoftwareSystemsRepository softwareSystemsRepository, IDiscountsRepository discountsRepository, IPaymentsRepository paymentsRepository)
         {
             _contractsRepository = contractsRepository;
             _clientsRepository = clientsRepository;
             _softwareSystemsRepository = softwareSystemsRepository;
             _discountsRepository = discountsRepository;
+            _paymentsRepository = paymentsRepository;
         }
 
         public async Task<Contract> CreateContractAsync(RequestContractCreateDto request)
@@ -76,8 +79,31 @@ namespace ABC.Services.Contracts;
 
         public async Task<Payment> CreatePaymentAsync(RequestPaymentCreateDto request)
         {
+            
+            if (request.ClientId != await _contractsRepository.GetClientIdFromContractIdAsync(request.ContractId))
+            {
+                throw new DomainException()
+                {
+                    Message = "Client assigned to payment is different in request.",
+                    StatusCode = 400
+                };
+            }
+
+            if (await _clientsRepository.GetClientByIdAsync(request.ClientId) is null)
+            {
+                throw new DomainException()
+                {
+                    Message = "Client for given Id: " + request.ClientId + " not found.",
+                    StatusCode = 404
+                };
+            }
+
+            
+            
             var contract = await _contractsRepository.GetContractByIdAsync(request.ContractId);
 
+            
+            
             if (contract == null ) 
             {
                 throw new DomainException()
@@ -89,6 +115,7 @@ namespace ABC.Services.Contracts;
 
             if (DateTime.Now > contract.DateTo)
             {
+                //_paymentsRepository;
                 throw new DomainException()
                 {
                     Message = "Payment date is not up to date. Payment date: " + DateTime.Now + "Contract Payment Date: " + contract.DateTo,

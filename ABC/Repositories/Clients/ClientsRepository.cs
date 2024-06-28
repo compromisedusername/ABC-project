@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using ABC.Data;
 using ABC.Models;
 using Microsoft.EntityFrameworkCore;
@@ -29,6 +30,8 @@ namespace ABC.Repositories.Clients
             return await _context.ClientsCompanies.FirstOrDefaultAsync(e => e.KRS == validatePeselOrKrs) != null ||
                    await _context.ClientsNaturals.FirstOrDefaultAsync(e => e.PESEL == validatePeselOrKrs) != null;
         }
+
+        
 
         public async Task<bool> UpdateClientAsync(Client client)
         {

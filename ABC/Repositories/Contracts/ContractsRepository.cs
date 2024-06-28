@@ -43,16 +43,16 @@ public class ContractsRepository : IContractsRepository
         return !await _context.Contracts.AnyAsync(c => c.IdClient == clientId && c.IdSoftwareSystem == softwareSystemId && c.IsActive);
     }
 
-    public async Task<decimal> GetTotalPaymentsForContract(int contractId)
-    {
-        return await _context.Payments.Where(p => p.IdContract == contractId).SumAsync(p => p.MoneyAmount);
-    }
-
     public async Task<bool> HasPreviousContracts(int clientId)
     {
         return await _context.Contracts.AnyAsync(c => c.IdClient == clientId && (c.IsSigned || c.IsActive));
     }
-    
+
+    public async Task<decimal> GetTotalPaymentsForContract(int contractId)
+    {
+        return await _context.Payments.Where(p => p.IdContract == contractId ).SumAsync(p => p.MoneyAmount);
+    }
+
     public async Task<decimal> GetPredictedRevenueAsync()
     {
         return await _context.Contracts
@@ -65,6 +65,11 @@ public class ContractsRepository : IContractsRepository
         return await _context.Contracts
             .Where(c => (c.IdSoftwareSystem == productId) && (!c.IsSigned || c.IsActive))
             .SumAsync(c => c.Price);
+    }
+    public async Task<int> GetClientIdFromContractIdAsync(int requestContractId)
+    {
+        var contract = await _context.Contracts.FirstOrDefaultAsync(e => e.Id == requestContractId);
+        return contract.IdClient;
     }
     
 }
