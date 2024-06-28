@@ -30,8 +30,9 @@ public class ContractsRepository : IContractsRepository
         _context.Contracts.Update(contract);
         return await _context.SaveChangesAsync() > 0;
     }
+    
 
-    public async Task<bool> AddPaymentAsync(Payment payment)
+    public async Task<bool> AddPaymentAsync(Models.Payment payment)
     {
         _context.Payments.Add(payment);
         return await _context.SaveChangesAsync() > 0;
@@ -51,4 +52,19 @@ public class ContractsRepository : IContractsRepository
     {
         return await _context.Contracts.AnyAsync(c => c.IdClient == clientId && (c.IsSigned || c.IsActive));
     }
+    
+    public async Task<decimal> GetPredictedRevenueAsync()
+    {
+        return await _context.Contracts
+            .Where(c => !c.IsSigned || c.IsActive)
+            .SumAsync(c => c.Price);
+    }
+
+    public async Task<decimal> GetPredictedRevenueByProductAsync(int productId)
+    {
+        return await _context.Contracts
+            .Where(c => (c.IdSoftwareSystem == productId) && (!c.IsSigned || c.IsActive))
+            .SumAsync(c => c.Price);
+    }
+    
 }

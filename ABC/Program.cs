@@ -67,49 +67,55 @@ var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration[
 var issuer = (builder.Configuration["Jwt:Issuer"]);
 var audience = (builder.Configuration["Jwt:Audience"]);
 
-builder.Services.AddAuthentication(options =>
-{
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(opt =>
-{
-    
-    
-    opt.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,  
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ClockSkew = TimeSpan.FromMinutes(2),
-        ValidIssuer = issuer,
-        ValidAudience = audience,
-        IssuerSigningKey = key
-    };
 
-    opt.Events = new JwtBearerEvents
+builder.Services.AddAuthentication(options =>
     {
-        OnAuthenticationFailed = context =>
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(opt =>
+    {
+
+
+        opt.TokenValidationParameters = new TokenValidationParameters
         {
-            if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.FromMinutes(2),
+            ValidIssuer = issuer,
+            ValidAudience = audience,
+            IssuerSigningKey = key
+        };
+
+        opt.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = context =>
             {
-                context.Response.Headers.Add("Token-expired", "true");
+                if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                {
+                    context.Response.Headers.Add("Token-expired", "true");
+                }
+
+                return Task.CompletedTask;
             }
-            return Task.CompletedTask;
-        }
-    };
-}).AddJwtBearer("IgnoreTokenExpirationScheme",opt =>
-{
-    opt.TokenValidationParameters = new TokenValidationParameters
+        };
+    })
+    .AddJwtBearer("IgnoreTokenExpirationScheme",opt =>
     {
-        ValidateIssuer = true,   //by who
-        ValidateAudience = true, //for whom
-        ValidateLifetime = false,
-        ClockSkew = TimeSpan.FromMinutes(2),
-        ValidIssuer = issuer, //should come from configuration
-        ValidAudience = audience, //should come from configuration
-        IssuerSigningKey = key
-    };
-});
+        opt.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,   //by who
+            ValidateAudience = true, //for whom
+            ValidateLifetime = false,
+            ClockSkew = TimeSpan.FromMinutes(2),
+            ValidIssuer = issuer, //should come from configuration
+            ValidAudience = audience, //should come from configuration
+            IssuerSigningKey = key
+        };
+    });
+    
+    
 
 
 

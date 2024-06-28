@@ -155,8 +155,6 @@ public class AuthController : ControllerBase
         user.RefreshTokenExp = DateTime.Now.AddDays(1);
         _context.SaveChanges();
 
-        var client = new HttpClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", jwtToken.ToString());
         
         return Ok(new
         {
