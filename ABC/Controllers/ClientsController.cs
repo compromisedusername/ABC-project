@@ -24,7 +24,7 @@ namespace ABC.Controllers
              return Created();
            
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateClient(int id, [FromBody] RequestClientUpdateDto request)
         {
@@ -32,7 +32,7 @@ namespace ABC.Controllers
             return NoContent();
             
         }
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteClient(int id)
         {

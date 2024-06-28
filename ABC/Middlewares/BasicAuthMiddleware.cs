@@ -1,10 +1,11 @@
-namespace GakkoHorizontalSlice.Middlewares;
-
-using Microsoft.AspNetCore.Http;
-using System;
 using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
+using ABC.Data;
+using ABC.Helpers;
+using Microsoft.EntityFrameworkCore;
+
+namespace ABC.Middlewares;
 
 public class BasicAuthMiddleware
 {
@@ -16,11 +17,11 @@ public class BasicAuthMiddleware
         _next = next;
     }
 
-    public async Task InvokeAsync(HttpContext context)
+    public async Task InvokeAsync(HttpContext httpContext, AppDatabaseContext dbContext)
     {
-        if (context.Request.Headers.ContainsKey("Authorization"))
+        if (httpContext.Request.Headers.ContainsKey("Authorization"))
         {
-            var authHeader = AuthenticationHeaderValue.Parse(context.Request.Headers["Authorization"]);
+            var authHeader = AuthenticationHeaderValue.Parse(httpContext.Request.Headers["Authorization"]);
 
             if (authHeader.Scheme.Equals("basic", StringComparison.OrdinalIgnoreCase) &&
                 authHeader.Parameter != null)
@@ -29,23 +30,49 @@ public class BasicAuthMiddleware
                 var username = credentials[0];
                 var password = credentials[1];
 
-                // Replace with your own user validation logic
-                if (IsAuthorized(username, password))
+                Console.WriteLine($"Attempting to authorize user: {username}");
+
+                if (await IsAuthorized(username, password, dbContext))
                 {
-                    await _next(context);
+                    // Add a custom claim to mark as authenticated by Basic Auth
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Name, username)
+                    };
+
+                    var identity = new ClaimsIdentity(claims, "Basic");
+                    httpContext.User = new ClaimsPrincipal(identity);
+
+                    Console.WriteLine($"User {username} authorized successfully.");
+                    await _next(httpContext);
                     return;
+                }
+                else
+                {
+                    Console.WriteLine($"User {username} failed authorization.");
                 }
             }
         }
 
+        Console.WriteLine("Authorization header missing or invalid.");
         // Return 401 Unauthorized if authentication fails
-        context.Response.Headers["WWW-Authenticate"] = $"Basic realm=\"{Realm}\"";
-        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        httpContext.Response.Headers["WWW-Authenticate"] = $"Basic realm=\"{Realm}\"";
+        httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
     }
 
-    private bool IsAuthorized(string username, string password)
+    private async Task<bool> IsAuthorized(string login, string password, AppDatabaseContext context)
     {
-        // Replace this with your own logic
-        return username == "admin" && password == "password";
+        var user = await context.Users.FirstOrDefaultAsync(e => e.Login == login);
+        if (user == null)
+        {
+            Console.WriteLine($"User {login} not found.");
+            return false;
+        }
+
+        var hashedPasswordFromRequest = SecurityHelpers.GetHashedPasswordWithSalt(password, user.Salt);
+        var isAuthorized = hashedPasswordFromRequest.Equals(user.Password);
+
+        Console.WriteLine($"User {login} authorization status: {isAuthorized}");
+        return isAuthorized;
     }
 }

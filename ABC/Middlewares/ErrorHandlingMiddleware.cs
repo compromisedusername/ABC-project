@@ -1,7 +1,7 @@
 using System.Net;
 using ABC.Exceptions;
 
-namespace GakkoHorizontalSlice.Middlewares;
+namespace ABC.Middlewares;
 
 public class ErrorHandlingMiddleware
 {

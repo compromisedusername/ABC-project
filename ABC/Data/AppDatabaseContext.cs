@@ -1,4 +1,5 @@
 using ABC.Models;
+using GakkoHorizontalSlice.Model;
 using Microsoft.EntityFrameworkCore;
 
 namespace ABC.Data;
@@ -32,6 +33,7 @@ public class AppDatabaseContext : DbContext
     {
        
         base.OnModelCreating(modelBuilder);
+        
         
         modelBuilder.Entity<ContractsSoftwareSystems>()
             .HasKey(cs => new { cs.IdContract, cs.IdSoftwareSystem });

@@ -4,6 +4,7 @@ using ABC.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ABC.Migrations
 {
     [DbContext(typeof(AppDatabaseContext))]
-    partial class AppDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240627211007_AddAuthModels")]
+    partial class AddAuthModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -187,8 +190,8 @@ namespace ABC.Migrations
                         new
                         {
                             Id = 1,
-                            DateFrom = new DateTime(2024, 6, 27, 23, 24, 26, 256, DateTimeKind.Local).AddTicks(735),
-                            DateTo = new DateTime(2024, 7, 17, 23, 24, 26, 256, DateTimeKind.Local).AddTicks(1230),
+                            DateFrom = new DateTime(2024, 6, 27, 23, 10, 6, 327, DateTimeKind.Local).AddTicks(3516),
+                            DateTo = new DateTime(2024, 7, 17, 23, 10, 6, 327, DateTimeKind.Local).AddTicks(3918),
                             IdClient = 1,
                             IdDiscount = 1,
                             IdSoftwareSystem = 1,
@@ -252,8 +255,8 @@ namespace ABC.Migrations
                         new
                         {
                             Id = 1,
-                            DateFrom = new DateTime(2024, 6, 26, 23, 24, 26, 251, DateTimeKind.Local).AddTicks(4974),
-                            DateTo = new DateTime(2024, 7, 7, 23, 24, 26, 255, DateTimeKind.Local).AddTicks(1027),
+                            DateFrom = new DateTime(2024, 6, 26, 23, 10, 6, 322, DateTimeKind.Local).AddTicks(8368),
+                            DateTo = new DateTime(2024, 7, 7, 23, 10, 6, 326, DateTimeKind.Local).AddTicks(4287),
                             Name = "Black Friday",
                             Value = 20
                         });
@@ -292,7 +295,7 @@ namespace ABC.Migrations
                         new
                         {
                             Id = 1,
-                            Date = new DateTime(2024, 6, 27, 23, 24, 26, 255, DateTimeKind.Local).AddTicks(7871),
+                            Date = new DateTime(2024, 6, 27, 23, 10, 6, 327, DateTimeKind.Local).AddTicks(714),
                             IdClient = 1,
                             IdContract = 1,
                             MoneyAmount = 1000m
@@ -357,18 +360,15 @@ namespace ABC.Migrations
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Login")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("RefreshToken")
                         .IsRequired()
@@ -379,8 +379,7 @@ namespace ABC.Migrations
 
                     b.Property<string>("Salt")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("IdUser");
 
