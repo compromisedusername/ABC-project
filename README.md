@@ -74,6 +74,7 @@ After logging in, click the "Authorize" button to access the secure endpoints.
 Below is the Entity-Relationship Diagram (ERD) for the database schema used in this project.
 
 ![ERD Diagram](https://github.com/compromisedusername/ABC-project/assets/100251433/9b06adae-d79d-4b66-9b8a-9544b2fd7543)
+Made in https://my.vertabelo.com/login
 
 ---
 
