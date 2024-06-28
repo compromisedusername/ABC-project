@@ -1,6 +1,6 @@
 Projekt z przedmiotu APBD, polegający na stworzeniu API w .NET, używając EntityFramework.
+![Corporation_ABC-2024-06-28_15-23(1)](https://github.com/compromisedusername/ABC-project/assets/100251433/7c3d6289-1767-4a8c-9a44-10b22d0fd209)
 
-![Corporation_ABC-2024-06-27_18-17](https://github.com/compromisedusername/ABC-project/assets/100251433/cea0bba9-fade-4d45-86d8-ffc84b6af6f7)
 
 Uznawanie przychodów to powszechny problem w systemach biznesowych. Chodzi o to, kiedy można faktycznie zapisać otrzymane
 pieniądze w księgach i potraktować jako przychód firmy. Jeśli sprzedamy komuś filiżankę kawy, to sytuacja jest prosta: otrzymujemy
