@@ -1,4 +1,5 @@
 using ABC.DTOs;
+using ABC.Models;
 using ABC.Services.Contracts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,16 +21,28 @@ public class ContractsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateContract([FromBody] RequestContractCreateDto request)
     {
-        var result = await _contractsService.CreateContractAsync(request);
+        var contract = await _contractsService.CreateContractAsync(request);
+        var result = new
+        {
+            UpdateInformation = contract.UpdateInformation,
+            IdClient = contract.IdClient,
+            Price = contract.Price
+        };
         return Created("api/Contracts/created",result);
     }
     [Authorize]
     [HttpPost("pay")]
     public async Task<IActionResult> CreatePayment([FromBody] RequestPaymentCreateDto request)
     {
-        var result = await _contractsService.CreatePaymentAsync(request);
-        
-            return Created("api/Contracts/pay/created/",result);
+        var payment = await _contractsService.CreatePaymentAsync(request);
+        var result = new
+        {
+            AmountPaid = payment.MoneyAmount,
+            IdClient = payment.IdClient,
+            IdContract = payment.IdContract
+        };
+        return Created("api/Contracts/pay/created/", result
+            );
         
     }
 }

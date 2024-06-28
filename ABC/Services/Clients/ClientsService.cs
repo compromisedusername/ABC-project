@@ -29,7 +29,7 @@ public class ClientsService : IClientsService
         };
         
         Client client;
-        string validatePeselOrKrs;
+        string peselOrKrsForValidation;
         if (request.ClientType == "Natural")
         {
             client = new ClientNatural
@@ -41,7 +41,7 @@ public class ClientsService : IClientsService
                 LastName = request.LastName,
                 PESEL = request.PESEL
             };
-            validatePeselOrKrs = request.PESEL;
+            peselOrKrsForValidation = request.PESEL;
         }
         else
         {
@@ -53,11 +53,11 @@ public class ClientsService : IClientsService
                 CompanyName = request.CompanyName,
                 KRS = request.KRS
             };
-            validatePeselOrKrs = request.KRS;
+            peselOrKrsForValidation = request.KRS;
 
         }
 
-        if (await _clientsRepository.DoesClientWithGivenPeselOrKrsExist(validatePeselOrKrs))
+        if (await _clientsRepository.DoesClientWithGivenPeselOrKrsExist(peselOrKrsForValidation))
         {
                 throw new DomainException()
                 {

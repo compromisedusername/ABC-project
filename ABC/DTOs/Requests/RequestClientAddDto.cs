@@ -23,12 +23,11 @@ public class RequestClientAddDto
     [Required]
     [MaxLength(50)]
     public string LastName { get; set; } 
-    [MaxLength(9)]
-    [MinLength(9)]
-    public string PESEL { get; set; } 
+
     [MaxLength(150)]
-    public string CompanyName { get; set; }
-    [MinLength(7)]
+    public string? CompanyName { get; set; }
     [MaxLength(14)]
-    public string KRS { get; set; } 
+    public string? KRS { get; set; }
+    [MaxLength(9)]
+    public string? PESEL { get; set; } 
 }

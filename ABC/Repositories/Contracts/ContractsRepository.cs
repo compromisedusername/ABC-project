@@ -80,4 +80,10 @@ public class ContractsRepository : IContractsRepository
         _context.Contracts.Update(contract);
         await _context.SaveChangesAsync();
     }
+
+   
+
+   
+
+   
 }

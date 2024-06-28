@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using ABC.Controllers;
 using ABC.Data;
 using ABC.Middlewares;
@@ -25,9 +26,12 @@ var issuer = (builder.Configuration["Jwt:Issuer"]);
 var audience = (builder.Configuration["Jwt:Audience"]);
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(o => o.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve);
 builder.Services.AddHttpClient();
 
 builder.Services.AddSwaggerGen(options =>
@@ -144,7 +148,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
-//app.UseMiddleware<BasicAuthMiddleware>();
 
 app.MapControllers();
 

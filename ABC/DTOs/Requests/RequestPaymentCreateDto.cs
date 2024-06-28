@@ -10,4 +10,7 @@ public class RequestPaymentCreateDto
     public int ClientId { get; set; }
     [Required]
     public decimal Amount { get; set; }
+    [Required]
+    [DataType(DataType.Date)]
+    public DateTime PaymentDate { get; set; }
 }

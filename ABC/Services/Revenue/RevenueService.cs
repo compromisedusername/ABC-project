@@ -34,14 +34,16 @@ public class RevenueService : IRevenueService
 
         public async Task<decimal> GetPredictedRevenueAsync(string currency)
         {
-            var totalRevenue = await _contractsRepository.GetPredictedRevenueAsync();
-            return await ConvertToCurrency(totalRevenue, currency);
+            var totalPayments = await _paymentsRepository.GetTotalPaymentsAsync();
+            var totalRevenuePredicted = await _contractsRepository.GetPredictedRevenueAsync();
+            return await ConvertToCurrency(totalRevenuePredicted + totalPayments, currency);
         }
 
         public async Task<decimal> GetPredictedRevenueByProductAsync(int productId, string currency)
         {
-            var totalRevenue = await _contractsRepository.GetPredictedRevenueByProductAsync(productId);
-            return await ConvertToCurrency(totalRevenue, currency);
+            var totalPayments = await _paymentsRepository.GetTotalPaymentsByProductAsync(productId);
+            var totalRevenuePredcited = await _contractsRepository.GetPredictedRevenueByProductAsync(productId);
+            return await ConvertToCurrency(totalRevenuePredcited + totalPayments, currency);
         }
 
         private async Task<decimal> ConvertToCurrency(decimal amount, string currency)
@@ -50,22 +52,14 @@ public class RevenueService : IRevenueService
             {
                 return amount;
             }
+            
+            var exchangeRateResponseJson =  await _exchangeRateService.GetExchangeRatesAsync("PLN");
 
-            /*try
-            {*/
-                var exchangeRateResponse =  await _exchangeRateService.GetExchangeRatesAsync("PLN");
-                var rate = exchangeRateResponse.ConversionRates[currency.ToLower()];
-                return amount * rate;
+            var rate = exchangeRateResponseJson.Conversion_Rates[currency.ToUpper()];
+            return amount * (decimal)rate;
 
-            /*}
-            catch (Exception e)
-            {
-                throw new DomainException()
-                {
-                    Message = "Given currency does not exist. " + e.Message,
-                    StatusCode = 404
-                };
-            }*/
+            
+          
         
         }
     }

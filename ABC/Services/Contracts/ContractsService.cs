@@ -79,18 +79,20 @@ namespace ABC.Services.Contracts;
 
         public async Task<Payment> CreatePaymentAsync(RequestPaymentCreateDto request)
         {
-            
-            if (request.ClientId != await _contractsRepository.GetClientIdFromContractIdAsync(request.ContractId))
-            {
-                throw new DomainException()
+
+                if (request.ClientId != await _contractsRepository.GetClientIdFromContractIdAsync(request.ContractId))
                 {
-                    Message = "Client assigned to payment is different in request.",
-                    StatusCode = 400
-                };
-            }
+                    throw new DomainException()
+                    {
+                        Message = "Client assigned to payment is different in request.",
+                        StatusCode = 400
+                    };
+                }
+            
 
             if (await _clientsRepository.GetClientByIdAsync(request.ClientId) is null)
             {
+
                 throw new DomainException()
                 {
                     Message = "Client for given Id: " + request.ClientId + " not found.",
@@ -101,9 +103,6 @@ namespace ABC.Services.Contracts;
             
             
             var contract = await _contractsRepository.GetContractByIdAsync(request.ContractId);
-
-            
-            
             if (contract == null ) 
             {
                 throw new DomainException()
@@ -113,19 +112,11 @@ namespace ABC.Services.Contracts;
                 };
             }
 
-            if (DateTime.Now > contract.DateTo)
-            {
+            
                 
-                await _paymentsRepository.RefundAllPayments(request.ContractId);
-                await _contractsRepository.DeactiaveContract(request.ContractId);
-                throw new DomainException()
-                {
-                    Message = "Payment date is not up to date. Payment date: " + DateTime.Now + "Contract Payment Date: " + contract.DateTo,
-                    StatusCode = 400
-                };
-            }
 
             var totalPaid = await _contractsRepository.GetTotalPaymentsForContract(request.ContractId);
+
             if (totalPaid + request.Amount > contract.Price)
             {
                 var tooMuch = totalPaid + request.Amount - contract.Price ;
@@ -138,14 +129,13 @@ namespace ABC.Services.Contracts;
 
             var payment = new Payment
             {
-                IdContract = contract.Id,
+                IdContract = request.ContractId,
                 MoneyAmount = request.Amount,
-                Date = DateTime.Now,
+                Date = request.PaymentDate,
                 IdClient = contract.IdClient
             };
-
             var result = await _contractsRepository.AddPaymentAsync(payment);
-            
+
             if (result)
             {
                 totalPaid += request.Amount;
@@ -157,6 +147,22 @@ namespace ABC.Services.Contracts;
                 }
             }
 
+            
+            if (request.PaymentDate > contract.DateTo)
+            {
+               
+                await _paymentsRepository.RefundAllPayments(request.ContractId);
+                await _contractsRepository.DeactiaveContract(request.ContractId);
+                throw new DomainException()
+                {
+                    Message = "Payment date is not up to date. Payment date: " + request.PaymentDate +
+                              "Contract Payment Date: " + contract.DateTo,
+                    StatusCode = 400
+                };
+            }
+            
             return payment;
+            
+
         }
     }
