@@ -1,6 +1,6 @@
 # ABC Project
 
-This project is a part of the ABC Corporation and involves a service for fetching and displaying exchange rates. The service is configured to use an external API for real-time exchange rate data.
+This project is a part of the ABC Corporation.
 
 ## Table of Contents
 
