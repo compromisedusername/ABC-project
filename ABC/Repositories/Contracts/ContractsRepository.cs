@@ -71,5 +71,13 @@ public class ContractsRepository : IContractsRepository
         var contract = await _context.Contracts.FirstOrDefaultAsync(e => e.Id == requestContractId);
         return contract.IdClient;
     }
-    
+
+    public async Task DeactiaveContract(int requestContractId)
+    {
+        var contract = await _context.Contracts.FindAsync(requestContractId);
+        contract.IsActive = false;
+        contract.IsSigned = false;
+        _context.Contracts.Update(contract);
+        await _context.SaveChangesAsync();
+    }
 }

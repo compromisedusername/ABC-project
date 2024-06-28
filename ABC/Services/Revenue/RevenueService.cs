@@ -1,5 +1,8 @@
+using System.Runtime.InteropServices.JavaScript;
+using System.Text.Json;
 using ABC.Repositories.Contracts;
 using ABC.Repositories.Payment;
+using ABC.Services.ExchangeRates;
 
 namespace ABC.Services.Revenue;
 
@@ -7,11 +10,14 @@ public class RevenueService : IRevenueService
     {
         private readonly IPaymentsRepository _paymentsRepository;
         private readonly IContractsRepository _contractsRepository;
+        private readonly IConfiguration _config;
 
-        public RevenueService(IPaymentsRepository paymentsRepository, IContractsRepository contractsRepository)
+
+        public RevenueService(IPaymentsRepository paymentsRepository, IContractsRepository contractsRepository, IConfiguration config)
         {
             _paymentsRepository = paymentsRepository;
             _contractsRepository = contractsRepository;
+            _config = config;
         }
 
         public async Task<decimal> GetCurrentRevenueAsync(string currency)
@@ -46,10 +52,9 @@ public class RevenueService : IRevenueService
             }
 
             using var client = new HttpClient();
-            var response = await client.GetStringAsync($"https://api.exchangerate-api.com/v4/latest/PLN");
-            var rates = 1;//JObject.Parse(response)["rates"];
-            var rate = 1;//rates.Value<decimal>(currency);
-
+            var exchangeRateSerivce = new ExchangeRateService(client, _config);
+            var exchangeRateResponse = await exchangeRateSerivce.GetExchangeRatesAsync("PLN");
+            var rate = exchangeRateResponse.ConversionRates[currency];
             return amount * rate;
         }
     }

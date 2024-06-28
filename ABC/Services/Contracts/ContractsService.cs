@@ -115,7 +115,9 @@ namespace ABC.Services.Contracts;
 
             if (DateTime.Now > contract.DateTo)
             {
-                //_paymentsRepository;
+                
+                await _paymentsRepository.RefundAllPayments(request.ContractId);
+                await _contractsRepository.DeactiaveContract(request.ContractId);
                 throw new DomainException()
                 {
                     Message = "Payment date is not up to date. Payment date: " + DateTime.Now + "Contract Payment Date: " + contract.DateTo,

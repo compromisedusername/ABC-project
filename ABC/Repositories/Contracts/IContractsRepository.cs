@@ -16,4 +16,5 @@ public interface IContractsRepository
     Task<decimal> GetPredictedRevenueByProductAsync(int productId);
     Task<int> GetClientIdFromContractIdAsync(int requestContractId);
 
+    Task DeactiaveContract(int requestContractId);
 }

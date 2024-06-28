@@ -14,13 +14,24 @@ public class PaymentsRepository : IPaymentsRepository
 
     public async Task<decimal> GetTotalPaymentsAsync()
     {
-        return await _context.Payments.SumAsync(p => p.MoneyAmount);
+        return await _context.Payments.Where(e=>e.isRefunded==false).SumAsync(p => p.MoneyAmount);
     }
 
     public async Task<decimal> GetTotalPaymentsByProductAsync(int productId)
     {
         return await _context.Payments
-            .Where(p => p.Contract.IdSoftwareSystem == productId)
+            .Where(p => p.Contract.IdSoftwareSystem == productId && p.isRefunded==false)
             .SumAsync(p => p.MoneyAmount);
+    }
+
+    public async Task RefundAllPayments(int requestContractId)
+    {
+        var payments = await _context.Payments.Where(e => e.IdContract == requestContractId).ToListAsync();
+        foreach (var p in payments)
+        {
+            p.isRefunded = true;
+        }
+        _context.Payments.UpdateRange(payments);
+        await _context.SaveChangesAsync();
     }
 }
