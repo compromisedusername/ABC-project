@@ -42,5 +42,12 @@ public class PaymentsRepository : IPaymentsRepository
             .Where(p => p.Contract != null && !p.Contract.IsSigned)
             .SumAsync(e=>e.MoneyAmount);
     }
+    public async Task<decimal> GetPaymentsForUnsignedContractsByProductAsync(int productId)
+    {
+        return await _context.Payments
+            .Include(p => p.Contract)
+            .Where(p => p.Contract.IdSoftwareSystem == productId && !p.Contract.IsSigned )
+            .SumAsync(e=>e.MoneyAmount);
+    }
     
 }
