@@ -34,4 +34,13 @@ public class PaymentsRepository : IPaymentsRepository
         _context.Payments.UpdateRange(payments);
         await _context.SaveChangesAsync();
     }
+    
+    public async Task<decimal> GetPaymentsForUnsignedContractsAsync()
+    {
+        return await _context.Payments
+            .Include(p => p.Contract)
+            .Where(p => p.Contract != null && !p.Contract.IsSigned)
+            .SumAsync(e=>e.MoneyAmount);
+    }
+    
 }

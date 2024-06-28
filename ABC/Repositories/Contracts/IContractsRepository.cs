@@ -17,5 +17,5 @@ public interface IContractsRepository
     Task<int> GetClientIdFromContractIdAsync(int requestContractId);
 
     Task DeactiaveContract(int requestContractId);
-  
+
 }

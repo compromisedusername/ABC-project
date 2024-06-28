@@ -36,15 +36,18 @@ public class RevenueService : IRevenueService
         {
             var totalPayments = await _paymentsRepository.GetTotalPaymentsAsync();
             var totalRevenuePredicted = await _contractsRepository.GetPredictedRevenueAsync();
-            return await ConvertToCurrency(totalRevenuePredicted + totalPayments, currency);
+            var doubledPayments = await _paymentsRepository.GetPaymentsForUnsignedContractsAsync();
+            return await ConvertToCurrency(totalRevenuePredicted + totalPayments - doubledPayments , currency);
         }
 
         public async Task<decimal> GetPredictedRevenueByProductAsync(int productId, string currency)
         {
             var totalPayments = await _paymentsRepository.GetTotalPaymentsByProductAsync(productId);
             var totalRevenuePredcited = await _contractsRepository.GetPredictedRevenueByProductAsync(productId);
-            return await ConvertToCurrency(totalRevenuePredcited + totalPayments, currency);
+            return await ConvertToCurrency(totalRevenuePredcited + totalPayments , currency);
         }
+
+        
 
         private async Task<decimal> ConvertToCurrency(decimal amount, string currency)
         {
